@@ -1,4 +1,4 @@
-package io.simplepix.payment.adapter.out.persistence.adapter;
+package io.simplepix.payment.adapter.out.persistence;
 
 import io.simplepix.payment.adapter.out.persistence.entity.AccountEntity;
 import io.simplepix.payment.adapter.out.persistence.mapper.AccountPersistenceMapper;
