@@ -63,7 +63,13 @@ public class AccountEntity {
     public Instant getCreatedAt() { return createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }
 
-    void applyBalance(long balanceCents, Instant updatedAt) {
+    /**
+     * Applies a new balance to this managed entity, letting Hibernate's dirty checking
+     * handle the UPDATE on commit. Package-adjacent visibility isn't expressible in Java
+     * without JPMS, so this is public by necessity — intended for use by
+     * {@code AccountPersistenceAdapter} only.
+     */
+    public void applyBalance(long balanceCents, Instant updatedAt) {
         this.balanceCents = balanceCents;
         this.updatedAt = updatedAt;
     }
