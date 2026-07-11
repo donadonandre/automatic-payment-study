@@ -1,4 +1,8 @@
 package io.simplepix.payment.adapter.in.web.dto;
 
-public record InitiatePaymentResponse() {
-}
+import java.util.UUID;
+
+public record InitiatePaymentResponse(
+        UUID paymentId,
+        String status
+) {}
