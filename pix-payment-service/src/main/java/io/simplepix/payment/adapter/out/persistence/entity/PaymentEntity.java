@@ -85,7 +85,13 @@ public class PaymentEntity {
     public Instant getCreatedAt() { return createdAt; }
     public Instant getUpdatedAt() { return updatedAt; }
 
-    void applyStatus(PaymentStatus status, String failureReason, Instant updatedAt) {
+    /**
+     * Applies a new status and failure reason to this managed entity, letting Hibernate's dirty
+     * checking handle the UPDATE on commit. Package-adjacent visibility isn't expressible in Java
+     * without JPMS, so this is public by necessity — intended for use by
+     * {@code PaymentPersistenceAdapter} only.
+     */
+    public void applyStatus(PaymentStatus status, String failureReason, Instant updatedAt) {
         this.status = status;
         this.failureReason = failureReason;
         this.updatedAt = updatedAt;
