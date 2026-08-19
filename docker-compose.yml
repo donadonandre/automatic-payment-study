@@ -94,10 +94,12 @@ services:
       CONNECT_REST_PORT: "8083"
       CONNECT_PLUGIN_PATH: /kafka/connect
 
-  dict-service:
+dict-service:
     build:
       context: ./pix-bacen-dict
     container_name: simplepix-dict
+    environment:
+      DB_PATH: /app/data/dict.db
     ports:
       - "9090:9090"
     volumes:
