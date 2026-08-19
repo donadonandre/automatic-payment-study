@@ -1,4 +1,4 @@
-FROM debezium/connect:3.0
+FROM quay.io/debezium/connect:3.0
 
 ENV MONGO_CONNECTOR_VERSION=1.13.0
 
