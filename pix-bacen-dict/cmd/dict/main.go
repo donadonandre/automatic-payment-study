@@ -6,6 +6,8 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"os"
+	"path/filepath"
 
 	_ "modernc.org/sqlite"
 )
@@ -20,8 +22,19 @@ type PixKey struct {
 var db *sql.DB
 
 func main() {
+	dbPath := os.Getenv("DB_PATH")
+	if dbPath == "" {
+		dbPath = "dict.db" // fallback para execução local, fora de container
+	}
+
+	if dir := filepath.Dir(dbPath); dir != "." {
+		if err := os.MkdirAll(dir, 0o755); err != nil {
+			log.Fatalf("failed to create db directory: %v", err)
+		}
+	}
+
 	var err error
-	db, err = sql.Open("sqlite", "dict.db")
+	db, err = sql.Open("sqlite", dbPath)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -36,7 +49,7 @@ func main() {
 	mux.HandleFunc("POST /keys", handleRegisterKey)
 	mux.HandleFunc("DELETE /keys/{value}", handleDeleteKey)
 
-	log.Println("dict-service listening on :9090")
+	log.Printf("dict-service listening on :9090 (db: %s)", dbPath)
 	log.Fatal(http.ListenAndServe(":9090", mux))
 }
 
@@ -77,7 +90,6 @@ func handleRegisterKey(w http.ResponseWriter, r *http.Request) {
 		k.KeyValue, k.KeyType, k.ParticipantISPB, k.AccountRef,
 	)
 	if err != nil {
-		// unique constraint violado -> chave já registrada em algum participante
 		http.Error(w, `{"error":"key already registered"}`, http.StatusConflict)
 		return
 	}
