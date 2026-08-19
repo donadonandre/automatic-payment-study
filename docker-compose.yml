@@ -82,21 +82,28 @@ services:
     ports:
       - "8083:8083"
     environment:
-      CONNECT_BOOTSTRAP_SERVERS: kafka:29092
-      CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect
-      CONNECT_REST_PORT: 8083
-      CONNECT_GROUP_ID: simplepix-connect-cluster
-      CONNECT_CONFIG_STORAGE_TOPIC: _connect-configs
-      CONNECT_OFFSET_STORAGE_TOPIC: _connect-offsets
-      CONNECT_STATUS_STORAGE_TOPIC: _connect-status
-      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: 1
-      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
-      CONNECT_VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
+      BOOTSTRAP_SERVERS: kafka:29092
+      GROUP_ID: simplepix-connect-cluster
+      CONFIG_STORAGE_TOPIC: _connect-configs
+      OFFSET_STORAGE_TOPIC: _connect-offsets
+      STATUS_STORAGE_TOPIC: _connect-status
+      KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      VALUE_CONVERTER: org.apache.kafka.connect.json.JsonConverter
       CONNECT_VALUE_CONVERTER_SCHEMAS_ENABLE: "false"
+      CONNECT_REST_ADVERTISED_HOST_NAME: kafka-connect
+      CONNECT_REST_PORT: "8083"
       CONNECT_PLUGIN_PATH: /kafka/connect
+
+  dict-service:
+    build:
+      context: ./pix-bacen-dict
+    container_name: simplepix-dict
+    ports:
+      - "9090:9090"
+    volumes:
+      - dict_data:/app/data
 
 volumes:
   pg_data:
   mongo_data:
+  dict_data:
